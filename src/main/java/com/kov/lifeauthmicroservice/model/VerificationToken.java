@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
+
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -14,8 +16,10 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "verification_tokens")
-//добвить индексы
+@Table(name = "verification_tokens", indexes = {
+        @Index(name = "idx_verification_tokens_user_id", columnList = "user_id"),
+        @Index(name = "idx_verification_tokens_user_created", columnList = "user_id, created_at")
+})
 public class VerificationToken{ //активация пользователя после регистрации
 
     @Id
@@ -31,10 +35,10 @@ public class VerificationToken{ //активация пользователя п
     private String tokenHash;
 
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @Column(name = "expire_at", nullable = false)
-    private LocalDateTime expiresAt;//токен не должен существовать долгое время
+    private Instant expiresAt;//токен не должен существовать долгое время
 
     @Column(name = "used", nullable = false)
     private boolean used = false;//после активации пользователя токен должен быть деактивирован
@@ -42,7 +46,7 @@ public class VerificationToken{ //активация пользователя п
     @PrePersist
     void onCreate(){
         if(createdAt == null){
-            createdAt = LocalDateTime.now();
+            createdAt = Instant.now();
         }
     }
 }

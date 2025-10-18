@@ -14,10 +14,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)//переопределить поля только с аннотацией @EqualsAndHashCode.Include
-//добавить индексы
-@Table(name = "users")
-
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)//переопределить e&hc только для полей с аннотацией @EqualsAndHashCode.Include
+@Table(name = "users", indexes = {
+        @Index(name = "idx_user_username", columnList = "username"),
+        @Index(name = "idx_user_role", columnList = "role"),
+        @Index(name = "idx_user_email", columnList = "email")
+})
 public class User {
     @Id
     @UuidGenerator(style = UuidGenerator.Style.TIME)//новый тип TIME v7

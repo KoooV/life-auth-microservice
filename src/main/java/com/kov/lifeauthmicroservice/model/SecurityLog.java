@@ -9,9 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
-
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -22,8 +20,8 @@ import java.util.UUID;
 @Table(name = "security_log", indexes = {
         @Index(name = "idx_security_log_user_id", columnList = "user_id"),
         @Index(name = "idx_security_log_event_type", columnList = "event_type"),
-        @Index(name = "idx_security_log_created", columnList = "user_id, created_at")}
-)
+        @Index(name = "idx_security_log_created", columnList = "user_id, created_at")
+})
 public class SecurityLog {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

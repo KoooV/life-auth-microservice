@@ -6,9 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
-
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -19,8 +17,7 @@ import java.util.UUID;
 @Table(name = "password_reset_tokens", indexes = {
         @Index(name = "idx_password_reset_tokens_user_id", columnList = "user_id"),
         @Index(name = "idx_password_reset_tokens_token_hash", columnList = "token_hash"),
-}
-)
+})
 public class PasswordResetToken{ //для сброса пароля
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

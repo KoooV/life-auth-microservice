@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:16
+    container_name: life-auth-db
+    restart: always
+    environment:
+      POSTGRES_USER: kov
+      POSTGRES_PASSWORD: 0001
+      POSTGRES_DB: life_auth
+    ports:
+      - "1111:1111"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

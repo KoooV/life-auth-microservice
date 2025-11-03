@@ -4,6 +4,7 @@ import com.kov.lifeauthmicroservice.model.Role;
 import com.kov.lifeauthmicroservice.model.User;
 import com.kov.lifeauthmicroservice.repo.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -11,18 +12,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class UserService {
+public class UserService {// Не знает про JWT
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Transactional
-    public void register(String username, String password, String email){
+    public void register(@NonNull String username, @NonNull String password, @NonNull String email){
         logger.info("Trying to reg: {}" ,email);
         if(userRepository.findByEmail(email).isEmpty() || userRepository.findByName(username).isEmpty()) {
             User user = new User();
@@ -41,22 +43,27 @@ public class UserService {
     }
 
     @Transactional
-    public User findUserById(UUID id){
+    public User findUserById(@NonNull UUID id){
         return userRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("User not found"));
     }
 
     @Transactional
-    public User findUserByEmail(String email){
-        return userRepository.findByEmail(email).orElseThrow(()-> new IllegalArgumentException("User not found"));
+    public User findByEmail(@NonNull String email){
+        return userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
     @Transactional
-    public String getHashedPasswordById(UUID id){
-        return userRepository.getHashedPasswordById(id);
+    public void enableUser(@NonNull User user){
+        user.setEnabled(true);
     }
 
     @Transactional
-    public void resetHashedPassword(User user, String oldPassword, String newPassword){
+    public void lockeUser(@NonNull User user){
+        user.setLocked(true);
+    }
+
+    @Transactional
+    public void resetHashedPassword(@NonNull User user, @NonNull String oldPassword, @NonNull String newPassword){
         userRepository.findUserById(user.getId()).orElseThrow(()-> new IllegalArgumentException("User not found"));
         if(!passwordEncoder.matches(oldPassword, user.getHashedPassword())){
             throw new IllegalArgumentException("New password is incorrect");

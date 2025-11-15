@@ -1,16 +1,10 @@
 package com.kov.lifeauthmicroservice.controller;
 
-import com.kov.lifeauthmicroservice.DTO.LoginRequest;
-import com.kov.lifeauthmicroservice.DTO.MessageResponce;
-import com.kov.lifeauthmicroservice.DTO.RefreshTokenRequest;
-import com.kov.lifeauthmicroservice.DTO.RegisterRequest;
+import com.kov.lifeauthmicroservice.DTO.*;
 import com.kov.lifeauthmicroservice.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
@@ -19,22 +13,22 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<MessageResponce> register(@ResponseBody RegisterRequest request){
-        return ResponseEntity.ok();
+    public ResponseEntity<MessageResponse> register(@RequestBody RegisterRequest request){
+        return 
     }
 
     @PostMapping("/login")
-    public ResponseEntity<MessageResponce> login(@ResponseBody LoginRequest request){
-        return ResponseEntity.ok();
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request){
+        return 
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<MessageResponce> refreshToken(@ResponseBody RefreshTokenRequest request){
+    public ResponseEntity<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest request){
         return
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<MessageResponce> logout(@ResponseBody RegisterRequest request){
+    public ResponseEntity<MessageResponse> logout(@RequestBody RefreshTokenRequest request){
         return
     }
 }

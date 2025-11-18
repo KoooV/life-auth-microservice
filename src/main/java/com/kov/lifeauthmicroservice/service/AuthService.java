@@ -10,8 +10,6 @@ import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +32,7 @@ public class AuthService {
                     Role.USER
             );
             log.info("User successfully registered: {}" ,request.email());
-            return new MessageResponse("success reg");
+            return new MessageResponse("Success reg");
         }catch (Exception e){
             log.warn("Failed to register user with email ->{}", request.email());
             throw new UserNotRegisterException("Failed to register user: " + e);
@@ -42,7 +40,10 @@ public class AuthService {
     }
 
     @Transactional
-    public MessageResponse login(String username, String password){}
+    public MessageResponse login(@NonNull RegisterRequest request){
+        User user = userService.findByEmail(request.email());
+        if(user.isEnabled() && userService.verifyPassword(request.password(), userRepository.getHashedPasswordById(user.getId())))
+    }
 
 
 

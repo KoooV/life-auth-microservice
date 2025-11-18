@@ -6,6 +6,7 @@ import com.kov.lifeauthmicroservice.model.Role;
 import com.kov.lifeauthmicroservice.model.User;
 import com.kov.lifeauthmicroservice.repo.UserRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotNull;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ public class UserService {// Не знает про JWT
     private final UserRepository userRepository;
 
     @Transactional
-    public User createUser(@NonNull String username, @NonNull String password, @NonNull String email, @NonNull Role role){
+    public User createUser(@NotNull String username, @NonNull String password, @NonNull String email, @NonNull Role role){
         if(userRepository.findByName(username).isPresent() || userRepository.findByEmail(email).isPresent()) {
             log.warn("Duplicate user creation attempt: username ->{}, email ->{}",username, email);
             throw new DuplicateUserException("Duplicate user creation attempt");
@@ -53,7 +54,8 @@ public class UserService {// Не знает про JWT
     }
 
     @Transactional
-    public void enableUser(@NonNull User user){
+    public void enableUser(@NonNull UUID id){
+        User user = findById(id);
         if(user.isEnabled()){
             log.debug("User is already enabled: id ->{}, email ->{}", user.getId(), user.getEmail());
             return;// нет смысла дважды включать, выход
@@ -64,7 +66,8 @@ public class UserService {// Не знает про JWT
     }
 
     @Transactional
-    public void lockUser(@NonNull User user){
+    public void lockUser(@NonNull UUID id){
+        User user = findById(id);
         if(user.isLocked()){
             log.debug("User is already locked: id ->{}, email ->{}", user.getId(), user.getEmail());
             return;// нет смысла дважды блокировать, выход
@@ -74,7 +77,9 @@ public class UserService {// Не знает про JWT
         log.info("User locked: id ->{}, email ->{}" ,user.getId(), user.getEmail());
     }
 
-    public void unlockUser(@NonNull User user){
+    @Transactional
+    public void unlockUser(@NonNull UUID id){
+        User user = findById(id);
         if(!user.isLocked()){
             log.debug("User is already unlocked: id ->{}, email ->{}", user.getId(), user.getEmail());
             return;// нет смысла дважды разблокировать, выход
@@ -84,8 +89,13 @@ public class UserService {// Не знает про JWT
         log.info("User unlocked: id ->{}, email ->{}" ,user.getId(), user.getEmail());
     }
 
-    public boolean verifyPassword(@NonNull User user, @NonNull String newPassword){// newPassword -> пароль в сыром виде
-        return passwordEncoder.matches(newPassword, user.getHashedPassword());
+    @Transactional
+    public boolean verifyPassword(@NonNull UUID id, @NonNull String newPassword){// newPassword -> пароль в сыром виде 'raw'
+        String hashedPassword = findById(id).getHashedPassword();
+        if(hashedPassword == null){
+            return false;
+        }
+        return passwordEncoder.matches(newPassword, hashedPassword);
 
     }
 
@@ -98,9 +108,9 @@ public class UserService {// Не знает про JWT
     }
 
     @Transactional
-    public void resetHashedPassword(@NonNull User user, @NonNull String newPassword){
-        User currentUser = findById(user.getId());
-        if(!verifyPassword(user, newPassword)){
+    public void resetHashedPassword(@NonNull UUID id, @NonNull String newPassword){
+        User currentUser = findById(id);
+        if(!verifyPassword(id, newPassword)){
             throw new IllegalArgumentException("New password is incorrect");
         }
 

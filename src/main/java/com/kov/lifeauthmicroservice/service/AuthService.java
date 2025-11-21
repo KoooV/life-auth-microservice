@@ -6,12 +6,13 @@ import com.kov.lifeauthmicroservice.exceptions.UserNotRegisterException;
 import com.kov.lifeauthmicroservice.model.Role;
 import com.kov.lifeauthmicroservice.model.User;
 import com.kov.lifeauthmicroservice.repo.UserRepository;
-import jakarta.transaction.Transactional;
+
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor

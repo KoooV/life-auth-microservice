@@ -154,7 +154,6 @@ public class UserService {
         return passwordEncoder.matches(oldPassword, hashedPassword);
     }
 
-    // Internal entity loader for internal operations that need the JPA entity
     private User findEntityById(@NotNull UUID id) {
         Objects.requireNonNull(id, "User id must not be null");
         return userRepository.findUserById(id)

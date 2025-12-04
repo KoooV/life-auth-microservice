@@ -34,9 +34,9 @@ public class SecurityLogService {
         }
     }
 
-    public String getUserAgent(HttpServletRequest request){
-
-    }
+//    public String getUserAgent(HttpServletRequest request){
+//
+//    }
 
 
 }

@@ -1,13 +1,10 @@
 package com.kov.lifeauthmicroservice.service;
 
-import com.kov.lifeauthmicroservice.DTO.MessageResponse;
-import com.kov.lifeauthmicroservice.DTO.RegisterRequest;
+import com.kov.lifeauthmicroservice.DTO.*;
+import com.kov.lifeauthmicroservice.JWT.JwtUtil;
 import com.kov.lifeauthmicroservice.exceptions.UserNotRegisterException;
 import com.kov.lifeauthmicroservice.model.Role;
-import com.kov.lifeauthmicroservice.model.User;
 import com.kov.lifeauthmicroservice.repo.UserRepository;
-
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,16 +20,16 @@ public class AuthService {
     private final UserRepository userRepository;
     private final UserService userService;
 
+    private final VerificationService verificationService;
+    private final RefreshTokenService refreshTokenService;
+    private final JwtUtil jwtUtil;
+
     @Transactional
-    public MessageResponse register(@NonNull RegisterRequest request){
+    public MessageResponse register(RegisterRequest request){
         try{
-            userService.createUser(
-                    request.username(),
-                    request.password(),
-                    request.email(),
-                    Role.USER
-            );
-            log.info("User successfully registered: {}" ,request.email());
+            userService.createUser(request.username(), request.password(), request.email(), Role.USER);
+            verificationService.createAndSendVerification(request.email());
+            log.info("User successfully registered: {}", request.email());
             return new MessageResponse("Success reg");
         }catch (Exception e){
             log.warn("Failed to register user with email ->{}", request.email());
@@ -41,12 +38,32 @@ public class AuthService {
     }
 
     @Transactional
-    public MessageResponse login(@NonNull RegisterRequest request){
-        User user = userService.findByEmail(request.email());
-        if(user.isEnabled() && userService.verifyPassword(request.password(), userRepository.getHashedPasswordById(user.getId())))
+    public AuthResponse login(LoginRequest request){
+
     }
 
+    @Transactional
+    public AuthResponse refreshToken(RefreshTokenRequest request){
 
+    }
 
+    @Transactional
+    public MessageResponse logout(RefreshTokenRequest request){
 
+    }
+
+    @Transactional
+    public MessageResponse verifyRegistration(String token){
+
+    }
+
+    @Transactional
+    public MessageResponse requestPasswordReset(String email){
+
+    }
+
+    @Transactional
+    public MessageResponse resetPassword(String token, String newPassword){
+
+    }
 }

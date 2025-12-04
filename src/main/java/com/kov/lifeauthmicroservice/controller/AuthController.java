@@ -14,22 +14,25 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<MessageResponse> register(@RequestBody RegisterRequest request){
-        return 
+        MessageResponse resp = authService.register(request);
+        return ResponseEntity.ok(resp);
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request){
-        return 
+        AuthResponse resp = authService.login(request);
+        return ResponseEntity.ok(resp);
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest request){
-        return
+        AuthResponse resp = authService.refreshToken(request);
+        return ResponseEntity.ok(resp);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<MessageResponse> logout(@RequestBody RefreshTokenRequest request){
-        return
+        MessageResponse resp = authService.logout(request);
+        return ResponseEntity.ok(resp);
     }
 }
-

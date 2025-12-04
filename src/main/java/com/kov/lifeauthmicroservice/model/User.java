@@ -1,5 +1,6 @@
 package com.kov.lifeauthmicroservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -38,6 +39,7 @@ public class User {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @JsonIgnore
     @NotBlank
     @Size(min = 60, max = 255)//60, тк минимум для BCrypt хэша
     @Column(name = "hashed_password", nullable = false)
